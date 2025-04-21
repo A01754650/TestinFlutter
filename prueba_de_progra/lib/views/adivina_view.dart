@@ -20,59 +20,70 @@ class _ScreenState extends State<Screen> {
   void adivinar() {
     final input = int.tryParse(controller.text);
     if (input == null) {
-      showDialog(context: context, builder: (_) {
-        return AlertDialog(
-          title: Text('Error'),
-          content: Text('Por favor, ingresa un número válido.'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: Text('Aceptar'),
-            ),
-          ],
-        );
-      });
-      return; 
+      showDialog(
+        context: context,
+        builder: (_) {
+          return AlertDialog(
+            title: Text('Error'),
+            content: Text('Por favor, ingresa un número válido.'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text('Aceptar'),
+              ),
+            ],
+          );
+        },
+      );
+      return;
     }
 
     bool gano = viewModel.adivinarNum(input);
     if (gano) {
-      showDialog(context: context, builder: (_) {
-        return AlertDialog(
-          title: Text('¡Ganaste!'),
-          content: Text('Adivinaste el número es: ${viewModel.game.numeroO}'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                viewModel.nuevoJuego();
-                Navigator.of(context).pop();
-                setState(() {}); 
-              },
-              child: Text('Jugar de nuevo'),
-            ),
-          ],
-        );
-      });
+      showDialog(
+        context: context,
+        builder: (_) {
+          return AlertDialog(
+            title: Text('¡Ganaste!'),
+            content: Text('Adivinaste el número es: ${viewModel.game.numeroO}'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  viewModel.nuevoJuego();
+                  Navigator.of(context).pop();
+                  setState(() {});
+                },
+                child: Text('Jugar de nuevo'),
+              ),
+            ],
+          );
+        },
+      );
     } else if (viewModel.game.intentos == 0) {
-      showDialog(context: context, builder: (_) {
-        return AlertDialog(
-          title: Text('Perdiste'),
-          content: Text('El número era ${viewModel.game.numeroO}. ¡Intenta de nuevo!'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                viewModel.nuevoJuego();
-                Navigator.of(context).pop();
-                setState(() {});
-              },
-              child: Text('Jugar de nuevo'),
+      showDialog(
+        context: context,
+        builder: (_) {
+          return AlertDialog(
+            title: Text('Perdiste'),
+            content: Text(
+              'El número era ${viewModel.game.numeroO}. ¡Intenta de nuevo!',
             ),
-          ],
-        );
-      });
+            actions: [
+              TextButton(
+                onPressed: () {
+                  viewModel.nuevoJuego();
+                  Navigator.of(context).pop();
+                  setState(() {});
+                },
+                child: Text('Jugar de nuevo'),
+              ),
+            ],
+          );
+        },
+      );
     } else {
       setState(() {});
-      controller.clear(); 
+      controller.clear();
     }
   }
 
@@ -84,14 +95,19 @@ class _ScreenState extends State<Screen> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
+            Text(
+                  'Intentos restantes: ${viewModel.game.intentos}',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+            SizedBox(height: 20),
             Expanded(
               child: Row(
                 children: [
-                  columnas('Mayor', viewModel.menor),  
+                  columnas('Mayor', viewModel.menor),
                   SizedBox(width: 30),
-                  columnas('Menor', viewModel.mayor),  
+                  columnas('Menor', viewModel.mayor),
                   SizedBox(width: 30),
-                  columnasHistorial(),               
+                  columnasHistorial(),
                 ],
               ),
             ),
@@ -99,6 +115,7 @@ class _ScreenState extends State<Screen> {
             SizedBox(height: 20),
             Row(
               children: [
+                
                 Expanded(
                   child: TextField(
                     controller: controller,
@@ -113,17 +130,25 @@ class _ScreenState extends State<Screen> {
                 ElevatedButton(onPressed: adivinar, child: Text('Enviar')),
               ],
             ),
+
             SizedBox(height: 20),
             Text("Dificultad: $nivel", style: TextStyle(fontSize: 15)),
             Slider(
-              value: ['Facil', 'Medio', 'Dificil', 'Experto'].indexOf(nivel).toDouble(),
+              value:
+                  [
+                    'Facil',
+                    'Medio',
+                    'Dificil',
+                    'Experto',
+                  ].indexOf(nivel).toDouble(),
               min: 0,
               max: 3,
               divisions: 3,
               label: nivel,
               onChanged: (value) {
                 setState(() {
-                  nivel = ['Facil', 'Medio', 'Dificil', 'Experto'][value.toInt()];
+                  nivel =
+                      ['Facil', 'Medio', 'Dificil', 'Experto'][value.toInt()];
                   viewModel.seledif(nivel);
                   controller.clear();
                 });
@@ -190,7 +215,7 @@ class _ScreenState extends State<Screen> {
                     title: Text(
                       intento['valor'].toString(),
                       textAlign: TextAlign.center,
-                      style: TextStyle(color: color), 
+                      style: TextStyle(color: color),
                     ),
                   );
                 },
