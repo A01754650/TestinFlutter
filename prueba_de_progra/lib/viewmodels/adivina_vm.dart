@@ -20,7 +20,7 @@ class ViewModel{
     model = GameModel(
       numeroO: random.nextInt(mnumero) + 1,
       historial: [],
-      intentos: 4,
+      intentos: calcInt(),
     );
     mayor.clear();
     menor.clear();
@@ -33,7 +33,7 @@ class ViewModel{
 
     if (numero == model.numeroO) {
       historial.add({'valor': numero.toDouble(), 'acierto': 1});
-      return true; // Adivinó el número
+      return true; 
     } else {
       historial.add({'valor': numero.toDouble(), 'noacierto': 1});
       if (numero > model.numeroO) {
@@ -41,11 +41,41 @@ class ViewModel{
       } else {
         menor.add(numero);
       }
-      return false; // No adivinó el número 
+      return false; 
     }
+  
+  }
 
+  void seledif(String nivel){
+    switch (nivel) {
+      case 'Facil':
+        mnumero = 10;
+        break;
+      case 'Medio':
+        mnumero = 50;
+        break;
+      case 'Dificil':
+        mnumero = 100;
+        break;
+      case 'Experto':
+        mnumero = 1000;
+        break;
+      default:
+        mnumero = 10; 
+    }
+    nuevoJuego();
+  }
 
-
-
+  int calcInt(){
+    if (mnumero == 10){
+      return 5;
+    }else if (mnumero == 20){
+      return 8; 
+    }else if (mnumero == 100){
+      return 15;
+    }else if (mnumero == 1000){
+      return 25;
+  }
+  return 5; 
   }
 }
