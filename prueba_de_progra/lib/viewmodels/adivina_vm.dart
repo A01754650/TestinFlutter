@@ -24,7 +24,7 @@ class ViewModel{
     );
     mayor.clear();
     menor.clear();
-    historial.clear();
+    
   }
 
   bool adivinarNum(int numero) {
@@ -41,8 +41,7 @@ class ViewModel{
       } else {
         menor.add(numero);
       }
-      return false; 
-    }
+      return false;    }
   
   }
 
@@ -76,6 +75,6 @@ class ViewModel{
     }else if (mnumero == 1000){
       return 25;
   }
-  return 5; 
+  return 5;
   }
 }

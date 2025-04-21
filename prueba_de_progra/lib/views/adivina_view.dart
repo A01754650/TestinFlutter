@@ -14,7 +14,7 @@ class _ScreenState extends State<Screen> {
   @override
   void initState() {
     super.initState();
-    viewModel.nuevoJuego(); // Inicia un nuevo juego al cargar la pantalla
+    viewModel.nuevoJuego();
   }
 
   void adivinar() {
@@ -32,20 +32,21 @@ class _ScreenState extends State<Screen> {
           ],
         );
       });
+      return; 
     }
 
-    bool gano = viewModel.adivinarNum(input!);
-    if (gano){
+    bool gano = viewModel.adivinarNum(input);
+    if (gano) {
       showDialog(context: context, builder: (_) {
         return AlertDialog(
           title: Text('¡Ganaste!'),
-          content: Text('Adivinaste el número ${viewModel.game.numeroO} en ${viewModel.game.intentos} intentos.'),
+          content: Text('Adivinaste el número es: ${viewModel.game.numeroO}'),
           actions: [
             TextButton(
               onPressed: () {
                 viewModel.nuevoJuego();
                 Navigator.of(context).pop();
-                setState(() {}); // Actualiza la UI
+                setState(() {}); 
               },
               child: Text('Jugar de nuevo'),
             ),
@@ -62,7 +63,7 @@ class _ScreenState extends State<Screen> {
               onPressed: () {
                 viewModel.nuevoJuego();
                 Navigator.of(context).pop();
-                setState(() {}); // Actualiza la UI
+                setState(() {});
               },
               child: Text('Jugar de nuevo'),
             ),
@@ -70,8 +71,8 @@ class _ScreenState extends State<Screen> {
         );
       });
     } else {
-      setState(() {}); // Actualiza la UI si no se ganó ni se perdió
-      controller.clear(); // Limpia el campo de texto después de enviar el número
+      setState(() {});
+      controller.clear(); 
     }
   }
 
@@ -86,11 +87,11 @@ class _ScreenState extends State<Screen> {
             Expanded(
               child: Row(
                 children: [
-                  columnas('Mayor', []),
+                  columnas('Mayor', viewModel.menor),  
                   SizedBox(width: 30),
-                  columnas('Menor', []),
+                  columnas('Menor', viewModel.mayor),  
                   SizedBox(width: 30),
-                  columnas('Historial', []),
+                  columnasHistorial(),               
                 ],
               ),
             ),
@@ -115,21 +116,14 @@ class _ScreenState extends State<Screen> {
             SizedBox(height: 20),
             Text("Dificultad: $nivel", style: TextStyle(fontSize: 15)),
             Slider(
-              value:
-                  [
-                    'Facil',
-                    'Medio',
-                    'Dificil',
-                    'Experto',
-                  ].indexOf(nivel).toDouble(), // ← Aquí corregido
+              value: ['Facil', 'Medio', 'Dificil', 'Experto'].indexOf(nivel).toDouble(),
               min: 0,
               max: 3,
               divisions: 3,
               label: nivel,
               onChanged: (value) {
                 setState(() {
-                  nivel =
-                      ['Facil', 'Medio', 'Dificil', 'Experto'][value.toInt()];
+                  nivel = ['Facil', 'Medio', 'Dificil', 'Experto'][value.toInt()];
                   viewModel.seledif(nivel);
                   controller.clear();
                 });
@@ -161,6 +155,42 @@ class _ScreenState extends State<Screen> {
                     title: Text(
                       numeros[index].toString(),
                       textAlign: TextAlign.center,
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget columnasHistorial() {
+    return Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text('Historial', style: TextStyle(fontWeight: FontWeight.bold)),
+          SizedBox(height: 10),
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.grey[800],
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: ListView.builder(
+                itemCount: viewModel.historial.length,
+                itemBuilder: (context, index) {
+                  final intento = viewModel.historial[index];
+                  final bool acierto = intento.containsKey('acierto');
+                  final color = acierto ? Colors.green : Colors.red;
+
+                  return ListTile(
+                    title: Text(
+                      intento['valor'].toString(),
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: color), 
                     ),
                   );
                 },
